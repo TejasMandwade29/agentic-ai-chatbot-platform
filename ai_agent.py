@@ -12,14 +12,14 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 # Step 3: Setup LLMs and Tools
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
-from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_tavily import TavilySearch
 
 # Default Models
 openai_llm = ChatOpenAI(model="gpt-4o-mini")
 groq_llm = ChatGroq(model="llama-3.3-70b-versatile")
 
 # Search Tool
-search_tool = TavilySearchResults(max_results=2)
+search_tool = TavilySearch(max_results=2)
 
 # Step 4: Setup AI Agent
 from langgraph.prebuilt import create_react_agent
@@ -54,14 +54,17 @@ def get_response_from_ai_agent(
         tools=tools
     )
 
-    # Convert Query List to String
-    user_query = query[0] if isinstance(query, list) else query
-
     # Proper Message Format
-    messages = [
-        SystemMessage(content=system_prompt),
-        HumanMessage(content=user_query)
-    ]
+    messages = [SystemMessage(content=system_prompt)]
+    for msg in query:
+        # Pydantic models from backend are passed as dicts via FastAPI
+        role = msg.get("role") if isinstance(msg, dict) else getattr(msg, "role", "")
+        content = msg.get("content") if isinstance(msg, dict) else getattr(msg, "content", "")
+        
+        if role == "user":
+            messages.append(HumanMessage(content=content))
+        elif role == "assistant":
+            messages.append(AIMessage(content=content))
 
     # Invoke Agent
     response = agent.invoke({
