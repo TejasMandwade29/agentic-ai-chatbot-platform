@@ -32,27 +32,32 @@ I built this project to showcase my ability to integrate frontend interfaces wit
 
 ## 🏗️ 3. System Architecture
 
-![System Architecture](assets/diagram/architecture-diagram-v2.2.png)
-```
+The platform follows a clean, layered architecture separating the user interface from the backend AI logic.
 
-**Data Flow:**
-1. You type a message or record audio in the Streamlit frontend.
-2. If it's audio, it's sent to the FastAPI backend's `/transcribe` endpoint, translated to text via Groq Whisper, and sent back.
-3. The text prompt, along with your chat history and settings, is bundled into a JSON payload and sent to the FastAPI `/chat` endpoint.
-4. FastAPI passes the data to LangGraph. LangGraph decides if it needs to search the web using Tavily.
-5. LangGraph queries the selected LLM (Groq or OpenAI) with the context and any search results.
-6. The final text response is sent back to Streamlit and displayed on your screen.
+![System Architecture](assets/diagram/architecture-diagram-v2.2.png)
+
+**Data Flow Steps:**
+1. **User Input:** The user submits a text prompt or voice recording through the Streamlit frontend.
+2. **Transcription (If Voice):** Audio is sent to the FastAPI `/transcribe` endpoint, where Groq Whisper converts it to text.
+3. **Request Dispatch:** Streamlit bundles the text prompt, chat history, persona, and model settings, sending a JSON payload to the FastAPI `/chat` endpoint.
+4. **Agent Orchestration:** FastAPI forwards the request to the LangGraph ReAct agent.
+5. **Reasoning & Tooling:** LangGraph evaluates the prompt. If external information is needed, it triggers the Tavily Search API.
+6. **Inference:** The selected LLM (Groq or OpenAI) generates a response based on the context and search results.
+7. **Response Delivery:** The final response flows back through FastAPI to the Streamlit UI, where it is displayed alongside the visible reasoning steps.
 
 ---
 
 ## 💻 4. Tech Stack
 
-*   **FastAPI:** Chosen for the backend because it's fast, easy to build REST APIs with, and handles data validation automatically using Pydantic.
-*   **Streamlit:** Used for the frontend because it allows for rapid UI development in Python without needing to write custom React or HTML/CSS.
-*   **LangGraph:** Used over basic LangChain because it treats agent workflows as graphs, giving more control over the reasoning loop.
-*   **Groq & OpenAI:** Groq provides extremely fast inference speeds, while OpenAI acts as a reliable industry standard.
-*   **Tavily Search:** A search engine API optimized specifically for LLMs.
-*   **Groq Whisper:** Used for fast and accurate audio-to-text transcription.
+| Category | Technologies | Description |
+| :--- | :--- | :--- |
+| **Frontend** | Streamlit | Rapid UI development and session state management. |
+| **Backend** | FastAPI, Uvicorn | High-performance asynchronous REST API server. |
+| **AI Framework** | LangGraph, LangChain | Orchestrates the ReAct agent workflow and tool calling. |
+| **LLM Providers** | Groq, OpenAI | Provides fast inference (Llama 3, Mixtral) and reliable intelligence (GPT-4o). |
+| **Search & Retrieval** | Tavily Search | Real-time web search optimized for LLMs. |
+| **Voice Processing** | Groq Whisper | Fast and accurate audio-to-text transcription. |
+| **Deployment** | Render, Streamlit Cloud | Target cloud platforms for hosting backend and frontend. |
 
 ---
 
@@ -61,13 +66,17 @@ I built this project to showcase my ability to integrate frontend interfaces wit
 ```text
 AGENTIC-CHATBOT-FASTAPI/
 │
-├── backend.py            # FastAPI server, endpoints (/chat, /transcribe)
-├── frontend.py           # Streamlit UI, chat session state, layout
-├── ai_agent.py           # LangGraph agent logic, tool setup, LLM configuration
-├── config.py             # Centralized settings for Personas and Models
-├── requirements.txt      # List of required Python packages
-├── .env.example          # Template for environment variables
-└── README.md             # Project documentation
+├── assets/
+│   ├── diagram/               # Architecture diagram images
+│   └── screenshots/           # UI screenshots for documentation
+│
+├── frontend.py                # Streamlit UI, session management, and audio handling
+├── backend.py                 # FastAPI server, /chat and /transcribe endpoints
+├── ai_agent.py                # LangGraph ReAct agent logic and tool setup
+├── config.py                  # Centralized configurations (Personas, Models)
+├── requirements.txt           # Python dependencies
+├── .env.example               # Environment variables template
+└── README.md                  # Project documentation
 ```
 
 ---
