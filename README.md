@@ -32,31 +32,7 @@ I built this project to showcase my ability to integrate frontend interfaces wit
 
 ## 🏗️ 3. System Architecture
 
-The project separates the user interface from the heavy AI logic.
-
-```mermaid
-graph TD
-    subgraph Frontend [Streamlit UI]
-        A[User Input: Text/Voice] --> B[Session State Manager]
-        B --> C[Visible Reasoning UI]
-    end
-
-    subgraph Backend [FastAPI Service]
-        D[POST /chat] --> E[LangGraph ReAct Agent]
-        F[POST /transcribe] --> G[Groq Whisper API]
-    end
-
-    subgraph External APIs
-        H[Groq: Llama 3 / Mixtral]
-        I[OpenAI: GPT-4o-mini]
-        J[Tavily Search]
-    end
-
-    A -- Audio Bytes --> F
-    A -- JSON Payload --> D
-    E -- Tool Call --> J
-    E -- Inference --> H
-    E -- Inference --> I
+![System Architecture](assets/diagram/architecture-diagram-v2.2.png)
 ```
 
 **Data Flow:**
