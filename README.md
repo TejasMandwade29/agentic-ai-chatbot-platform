@@ -15,6 +15,17 @@ I built this project to showcase my ability to integrate frontend interfaces wit
 
 **Note:** Currently, chat sessions and memory are managed entirely using the browser's session state. This means your conversation history is isolated per chat, but **it will be lost if you refresh the page**.
 
+## 🚀 Live Demo
+
+🌐 Application:
+https://agentic-ai-chatbot-platform-u4fo8jctflxz3nkbe3knyh.streamlit.app
+
+⚙️ Backend API:
+https://agentic-ai-chatbot-backend.onrender.com
+
+❤️ Health Check:
+https://agentic-ai-chatbot-backend.onrender.com/health
+
 ---
 
 ## ✨ 2. Features
