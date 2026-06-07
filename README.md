@@ -160,11 +160,13 @@ streamlit run frontend.py
 
 ## 📸 9. Screenshots
 
-*(Add screenshots of your application here after pushing to GitHub)*
-
-| Main Chat Interface | Sidebar Navigation & Settings |
+| Main Chat Interface | Multi-Chat Sessions |
 | :---: | :---: |
-| <img src="https://via.placeholder.com/400x250.png?text=Main+Chat+UI" alt="Main UI Placeholder" width="400"/> | <img src="https://via.placeholder.com/400x250.png?text=Sidebar+UI" alt="Sidebar UI Placeholder" width="400"/> |
+| <img src="assets/screenshots/main-interface.png" alt="Main Chat Interface" width="400"/> | <img src="assets/screenshots/multi-chat-sessions.png" alt="Multi-Chat Sessions" width="400"/> |
+
+| Visible Reasoning Workflow | Configurable AI Personas |
+| :---: | :---: |
+| <img src="assets/screenshots/visible-reasoning.png" alt="Visible Reasoning" width="400"/> | <img src="assets/screenshots/ai-personas.png" alt="AI Personas" width="400"/> |
 
 ---
 
