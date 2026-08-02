@@ -69,7 +69,7 @@ Today, this is done manually by support agents — expensive, slow (hours to day
 ## 🏗️ Architecture
 
 <div align="center">
-  <img src="assets/diagram/architecture-diagram-v2.2.png" alt="Architecture Diagram" width="800"/>
+  <img src="assets/diagram/architecture-diagram.png" alt="Architecture Diagram" width="800"/>
 </div>
 
 **Data flow:**
