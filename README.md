@@ -9,6 +9,10 @@
 
 > **An AI agent that autonomously resolves customer transaction disputes and processes refunds — without a human in the loop.**
 
+<div align="center">
+  <img src="assets/screenshots/main-interface.png" alt="Main Interface" width="800"/>
+</div>
+
 ## 🚀 Live Demo
 
 🌐 Application:
@@ -54,41 +58,19 @@ Today, this is done manually by support agents — expensive, slow (hours to day
 
 **Agent replies:** *"Your refund for TXN-1002 has been successfully initiated. You will receive $99.00 USD back within 3–5 business days."*
 
+<div align="center">
+  <img src="assets/screenshots/visible-reasoning.png" alt="Visible Reasoning" width="600"/>
+</div>
+
 > 🧪 **Test transaction IDs:** `TXN-1001` (normal) · `TXN-1002` (duplicate — refundable) · `TXN-1003` (failed)
 
 ---
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                  Streamlit Frontend                      │
-│   Voice Input (Groq Whisper) + Text Chat UI             │
-└──────────────────────┬──────────────────────────────────┘
-                       │ HTTP POST /chat  (JSON payload)
-                       │ HTTP POST /transcribe  (audio bytes)
-┌──────────────────────▼──────────────────────────────────┐
-│                  FastAPI Backend                         │
-│   Pydantic validation · CORS · /health · /chat          │
-└──────────────────────┬──────────────────────────────────┘
-                       │ invoke agent
-┌──────────────────────▼──────────────────────────────────┐
-│             LangGraph ReAct Agent                        │
-│                                                          │
-│  ┌─────────────┐    ┌──────────────────────┐            │
-│  │  LLM Node   │◄──►│  Tool Execution Node  │            │
-│  │ Groq/OpenAI │    │  lookup_transaction   │            │
-│  └─────────────┘    │  evaluate_refund_policy│           │
-│                     │  initiate_refund       │           │
-│                     │  TavilySearch (opt.)   │           │
-│                     └──────────────────────┘            │
-└─────────────────────────────────────────────────────────┘
-                       │ reads/writes
-┌──────────────────────▼──────────────────────────────────┐
-│              Mock Transaction Database                   │
-│       (mock_db.py — in-memory, swappable to SQL)        │
-└─────────────────────────────────────────────────────────┘
-```
+<div align="center">
+  <img src="assets/diagram/architecture-diagram-v2.2.png" alt="Architecture Diagram" width="800"/>
+</div>
 
 **Data flow:**
 1. User sends a message (text or voice) via Streamlit.
@@ -111,6 +93,18 @@ Today, this is done manually by support agents — expensive, slow (hours to day
 - **Loops** until confident enough to produce a final answer.
 
 **LangGraph** models this as a **stateful graph with cycles** — something vanilla LangChain can't express. It manages the state machine, message history, and tool dispatch loop natively, making the agent reliable and debuggable.
+
+---
+
+## ✨ Features & UI
+
+<div align="center">
+  <img src="assets/screenshots/multi-chat-sessions.png" alt="Multi Chat Sessions" width="800"/>
+</div>
+<br/>
+<div align="center">
+  <img src="assets/screenshots/page_3.png" alt="Additional Features" width="800"/>
+</div>
 
 ---
 
