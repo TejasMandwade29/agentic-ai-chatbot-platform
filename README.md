@@ -196,5 +196,5 @@ Open `http://localhost:8501` → select **"L1 Support Agent"** persona → type 
 ## 👨‍💻 Author
 
 **Tejas Mandwade**
-- GitHub: [@TejasMandwade29](https://github.com/TejasMandwade29)
-- LinkedIn: [tejas-mandwade](https://www.linkedin.com/in/tejas-mandwade-34a179243/)
+- LinkedIn: [https://www.linkedin.com/in/tejas-mandwade](url)
+- Portfolio:[ https://tejas-portfolio-lake.vercel.app](url)
