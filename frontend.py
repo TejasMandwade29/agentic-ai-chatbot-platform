@@ -22,7 +22,6 @@ html, body, [class*="css"] {
 /* Hide Streamlit chrome */
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
-header { visibility: hidden; }
 .stDeployButton { display: none; }
 
 /* Main background */
