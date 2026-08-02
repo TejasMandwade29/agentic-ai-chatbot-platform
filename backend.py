@@ -47,6 +47,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
         # Groq requires a tuple of (filename, bytes) for the file upload
         file_tuple = (file.filename, audio_bytes)
         
+        
         transcription = client.audio.transcriptions.create(
             file=file_tuple,
             model="whisper-large-v3",

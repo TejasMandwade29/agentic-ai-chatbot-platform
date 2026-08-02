@@ -4,6 +4,7 @@ load_dotenv()
 
 # Step 2: Setup API Keys
 import os
+import json
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY")
@@ -13,13 +14,44 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 from langchain_tavily import TavilySearch
+from langchain.tools import tool
+
+import mock_db
 
 # Default Models
 openai_llm = ChatOpenAI(model="gpt-4o-mini")
 groq_llm = ChatGroq(model="llama-3.3-70b-versatile")
 
-# Search Tool
+# Search Tool (Optional fallback for general queries)
 search_tool = TavilySearch(max_results=2)
+
+# --- Fintech Domain Tools ---
+
+@tool
+def lookup_transaction(transaction_id: str) -> str:
+    """Look up a transaction by its ID to get details like amount, status, date, and duplicate count."""
+    data = mock_db.get_transaction(transaction_id)
+    return json.dumps(data)
+
+@tool
+def evaluate_refund_policy(transaction_id: str) -> str:
+    """Evaluate whether a transaction is eligible for a refund based on company policy.
+    Duplicate charges (duplicate_count > 1) are always eligible for a refund."""
+    data = mock_db.get_transaction(transaction_id)
+    if "error" in data:
+        return json.dumps({"eligible": False, "reason": data["error"]})
+
+    if data.get("duplicate_count", 1) > 1:
+        return json.dumps({"eligible": True, "reason": "Duplicate charge detected.", "refund_amount": data["amount"]})
+
+    return json.dumps({"eligible": False, "reason": "No valid refund reason found (not a duplicate charge)."})
+
+@tool
+def initiate_refund(transaction_id: str) -> str:
+    """Initiate a refund for a given transaction ID. Must only be called after confirming eligibility via evaluate_refund_policy."""
+    result = mock_db.update_transaction_status(transaction_id, "Refunded")
+    return json.dumps(result)
+
 
 # Step 4: Setup AI Agent
 from langgraph.prebuilt import create_react_agent
@@ -45,8 +77,10 @@ def get_response_from_ai_agent(
     else:
         return "Invalid provider selected"
 
-    # Setup Tools
-    tools = [search_tool] if allow_search else []
+    # Setup Tools — fintech tools are always available; search is optional
+    tools = [lookup_transaction, evaluate_refund_policy, initiate_refund]
+    if allow_search:
+        tools.append(search_tool)
 
     # Create Agent
     agent = create_react_agent(
