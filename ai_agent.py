@@ -31,18 +31,29 @@ search_tool = TavilySearch(max_results=2)
 def lookup_transaction(transaction_id: str) -> str:
     """Look up a transaction by its ID to get details like amount, status, date, and duplicate count."""
     data = mock_db.get_transaction(transaction_id)
+    mock_db.log_audit_event("LOOKUP_TRANSACTION", {"transaction_id": transaction_id})
     return json.dumps(data)
 
 @tool
 def evaluate_refund_policy(transaction_id: str) -> str:
     """Evaluate whether a transaction is eligible for a refund based on company policy.
-    Duplicate charges (duplicate_count > 1) are always eligible for a refund."""
+    Duplicate charges (duplicate_count > 1) are eligible, but amounts over $100 require human manager approval (High-Value Fraud Guardrail)."""
     data = mock_db.get_transaction(transaction_id)
     if "error" in data:
         return json.dumps({"eligible": False, "reason": data["error"]})
 
+    amount = data.get("amount", 0.0)
+    mock_db.log_audit_event("EVALUATE_POLICY", {"transaction_id": transaction_id, "amount": amount})
+
     if data.get("duplicate_count", 1) > 1:
-        return json.dumps({"eligible": True, "reason": "Duplicate charge detected.", "refund_amount": data["amount"]})
+        if amount > 100.0:
+            return json.dumps({
+                "eligible": False,
+                "requires_manager_approval": True,
+                "reason": f"High-value transaction (${amount} > $100 limit). Flagged for human manager review per Fraud Safety Guardrail.",
+                "refund_amount": amount
+            })
+        return json.dumps({"eligible": True, "reason": "Duplicate charge detected.", "refund_amount": amount})
 
     return json.dumps({"eligible": False, "reason": "No valid refund reason found (not a duplicate charge)."})
 
@@ -50,7 +61,19 @@ def evaluate_refund_policy(transaction_id: str) -> str:
 def initiate_refund(transaction_id: str) -> str:
     """Initiate a refund for a given transaction ID. Must only be called after confirming eligibility via evaluate_refund_policy."""
     result = mock_db.update_transaction_status(transaction_id, "Refunded")
+    mock_db.log_audit_event("INITIATE_REFUND", {"transaction_id": transaction_id, "result": result})
     return json.dumps(result)
+
+@tool
+def send_refund_receipt(transaction_id: str, customer_email: str) -> str:
+    """Send an automated email receipt to the customer after a refund is processed."""
+    audit_res = mock_db.log_audit_event("SEND_EMAIL_RECEIPT", {"transaction_id": transaction_id, "email": customer_email})
+    return json.dumps({
+        "status": "Email Sent",
+        "recipient": customer_email,
+        "message": f"Refund confirmation receipt for {transaction_id} sent successfully.",
+        "audit": audit_res
+    })
 
 
 # Step 4: Setup AI Agent
@@ -78,7 +101,7 @@ def get_response_from_ai_agent(
         return "Invalid provider selected"
 
     # Setup Tools — fintech tools are always available; search is optional
-    tools = [lookup_transaction, evaluate_refund_policy, initiate_refund]
+    tools = [lookup_transaction, evaluate_refund_policy, initiate_refund, send_refund_receipt]
     if allow_search:
         tools.append(search_tool)
 

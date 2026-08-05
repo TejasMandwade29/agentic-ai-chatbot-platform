@@ -29,8 +29,20 @@ TRANSACTIONS = {
         "date": "2026-08-02",
         "description": "One-time purchase",
         "duplicate_count": 1
+    },
+    "TXN-1004": {
+        "user_id": "USR-888",
+        "amount": 250.00,
+        "currency": "USD",
+        "status": "Success",
+        "date": "2026-08-03",
+        "description": "Enterprise Subscription",
+        "duplicate_count": 2  # Flagged as high-value duplicate charge ($250 > $100 limit)
     }
 }
+
+# Audit trail log storage for compliance
+AUDIT_LOGS = []
 
 def get_transaction(transaction_id: str) -> dict:
     """Simulates a DB lookup for a transaction."""
@@ -42,3 +54,14 @@ def update_transaction_status(transaction_id: str, new_status: str) -> dict:
         TRANSACTIONS[transaction_id]["status"] = new_status
         return {"success": True, "transaction": TRANSACTIONS[transaction_id]}
     return {"error": "Transaction not found"}
+
+def log_audit_event(action: str, details: dict) -> dict:
+    """Logs an audit event for compliance and tracking."""
+    import datetime
+    event = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "action": action,
+        "details": details
+    }
+    AUDIT_LOGS.append(event)
+    return {"status": "Audit event recorded", "event": event}

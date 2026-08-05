@@ -246,8 +246,9 @@ st.sidebar.markdown("### 🧪 Mock DB — Test IDs")
 st.sidebar.markdown("""
 <div style="font-size: 0.82rem; line-height: 1.9; color: #9090b0;">
   <div>🟢 <b style="color:#e2e2f0;">TXN-1001</b> &nbsp;Normal &nbsp;<span style="color:#6b6b8a;">$49.99</span></div>
-  <div>🔴 <b style="color:#e2e2f0;">TXN-1002</b> &nbsp;Duplicate &nbsp;<span style="color:#6b6b8a;">$99.00</span> ✓ Refundable</div>
+  <div>🔴 <b style="color:#e2e2f0;">TXN-1002</b> &nbsp;Duplicate &nbsp;<span style="color:#6b6b8a;">$99.00</span> ✓ Auto-Refund</div>
   <div>⚫ <b style="color:#e2e2f0;">TXN-1003</b> &nbsp;Failed &nbsp;<span style="color:#6b6b8a;">$15.00</span></div>
+  <div>⚠️ <b style="color:#e2e2f0;">TXN-1004</b> &nbsp;High-Value &nbsp;<span style="color:#6b6b8a;">$250.00</span> 🛡️ Manager Escalate</div>
 </div>
 """, unsafe_allow_html=True)
 
