@@ -117,8 +117,9 @@ Today, this is done manually by support agents — expensive, slow (hours to day
 | **Agent** | LangGraph, LangChain | ReAct agent state machine, tool orchestration |
 | **LLM** | Groq (Llama 3.3 70B), OpenAI (GPT-4o-mini) | Reasoning and response generation |
 | **Transcription** | Groq Whisper | Audio-to-text for voice input |
+| **RAG Engine** | `rag_engine.py` | Vector similarity search over `data/policy_documents.txt` |
 | **Search** | Tavily Search | Optional real-time web search tool |
-| **Data** | mock_db.py | In-memory transaction store (swappable to PostgreSQL) |
+| **Data** | `mock_db.py` | In-memory transaction store (swappable to PostgreSQL) |
 
 ---
 
@@ -127,13 +128,16 @@ Today, this is done manually by support agents — expensive, slow (hours to day
 ```
 AGENTIC-CHATBOT-FASTAPI/
 │
-├── frontend.py       # Streamlit UI — chat, voice, session management
-├── backend.py        # FastAPI server — /chat and /transcribe endpoints
-├── ai_agent.py       # LangGraph ReAct agent + domain tool definitions
-├── config.py         # Persona system prompts and model configs
-├── mock_db.py        # In-memory transaction database
-├── requirements.txt  # Dependencies
-└── .env.example      # Environment variable template
+├── frontend.py            # Streamlit UI — chat, voice, RAG test queries, session management
+├── backend.py             # FastAPI server — /chat and /transcribe endpoints
+├── ai_agent.py            # LangGraph ReAct agent + domain tools + RAG tool
+├── rag_engine.py          # Vector search engine for policy knowledge base (RAG)
+├── config.py              # Persona system prompts and model configs
+├── mock_db.py             # In-memory transaction database & audit trail logger
+├── data/
+│   └── policy_documents.txt # Enterprise Fintech Policy Knowledge Base
+├── requirements.txt       # Dependencies
+└── .env.example           # Environment variable template
 ```
 
 ---

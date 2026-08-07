@@ -252,6 +252,15 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+st.sidebar.markdown("### 📚 RAG Vector Search")
+st.sidebar.markdown("""
+<div style="font-size: 0.8rem; color: #9090b0; line-height: 1.5;">
+  <i>Try asking:</i><br/>
+  • 💬 "What is the policy for international card disputes?"<br/>
+  • 💬 "What is the SLA processing time for refunds?"
+</div>
+""", unsafe_allow_html=True)
+
 st.sidebar.divider()
 
 # --- 5. SIDEBAR: UTILITIES ---

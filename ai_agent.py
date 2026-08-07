@@ -17,6 +17,14 @@ from langchain_tavily import TavilySearch
 from langchain.tools import tool
 
 import mock_db
+import rag_engine
+
+@tool
+def search_policy_knowledgebase(query: str) -> str:
+    """Perform a vector semantic search over the official Fintech Policy & Compliance Knowledge Base to answer general policy, SLA, chargeback, or cancellation questions."""
+    results = rag_engine.query_policy_knowledgebase(query)
+    mock_db.log_audit_event("RAG_KNOWLEDGEBASE_SEARCH", {"query": query})
+    return results
 
 # Default Models
 openai_llm = ChatOpenAI(model="gpt-4o-mini")
@@ -100,8 +108,8 @@ def get_response_from_ai_agent(
     else:
         return "Invalid provider selected"
 
-    # Setup Tools — fintech tools are always available; search is optional
-    tools = [lookup_transaction, evaluate_refund_policy, initiate_refund, send_refund_receipt]
+    # Setup Tools — fintech tools and RAG vector search are always available; web search is optional
+    tools = [lookup_transaction, evaluate_refund_policy, initiate_refund, send_refund_receipt, search_policy_knowledgebase]
     if allow_search:
         tools.append(search_tool)
 

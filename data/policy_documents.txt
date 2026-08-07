@@ -1,0 +1,24 @@
+===============================================================================
+OFFICIAL FINTECH ENTERPRISE POLICY & COMPLIANCE KNOWLEDGE BASE
+===============================================================================
+
+1. INTERNATIONAL TRANSACTION DISPUTES & CHARGEBACKS
+-------------------------------------------------------------------------------
+- Chargeback Window: Customers have up to 30 calendar days from the transaction date to report unauthorized or fraudulent international charges.
+- SLA & Processing Time: International dispute claims take 3-5 business days for initial review. Once approved, funds are credited within 48 hours.
+- Required Documentation: For claims exceeding $50, proof of non-authorization or a police report for stolen cards may be required by compliance.
+
+2. REFUND ELIGIBILITY & HIGH-VALUE ESCALATION (SAFETY GUARDRAILS)
+-------------------------------------------------------------------------------
+- Standard Auto-Refund: Duplicate transactions or system billing errors under $100.00 are eligible for automated instant refund processing.
+- High-Value Escalate ($100+ Limit): Any refund request for an amount exceeding $100.00 USD must be flagged for Human Manager Review. AI agents are strictly prohibited from auto-processing high-value refunds to prevent fraud.
+- Non-Refundable Claims: Single valid transactions with no duplicate charge flag or proven merchant error are strictly non-refundable under standard terms.
+
+3. SUBSCRIPTION & CANCELLATION TERMS
+-------------------------------------------------------------------------------
+- Pro-Rated Refunds: Annual plan cancellations requested within 7 days of renewal qualify for a pro-rated refund.
+- Monthly Subscriptions: Monthly plans cancelled mid-billing cycle remain active until the end of the billing period; no partial refunds are issued for unused days.
+
+4. AUDIT & COMPLIANCE LOGGING
+-------------------------------------------------------------------------------
+- Every dispute lookup, policy evaluation, refund attempt, and email dispatch is recorded in immutable audit logs for regulatory compliance (PCI-DSS & SOC2).
